@@ -18,7 +18,8 @@ metadata:
 - 2026-07-23：权限系统三次迭代——`acceptEdits` → `dontAsk` → `bypassPermissions` + VSCode 扩展专属权限开关，**权限完全关闭，零弹窗**
 - 2026-07-23：确立自动化工作流规则——需求-设计-开发-测试-验收完整闭环，执行阶段不逐个人工确认
 - 2026-07-23：初始化 Git 仓库 + .gitignore + 首次提交；确立版本管理规则——任务完成即提交推送
-- 2026-07-23：创建 GitHub 仓库 `suows/desktop-pets`，推送全部代码（3 个 commit）
+- 2026-07-23：创建 GitHub 仓库 `suows/desktop-pets`，推送全部代码
+- 2026-07-24：修复 Stop hook——agent 类型改为 command 类型，绕过 hook 子代理权限沙箱限制
 
 ## 下一步
 
