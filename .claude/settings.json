@@ -21,10 +21,9 @@
       {
         "hooks": [
           {
-            "type": "agent",
-            "prompt": "你是桌面宠物项目的上下文管理员。对话刚刚结束，你需要更新项目记忆文件。\n\n请执行以下步骤：\n\n1. 用 Read 读取以下文件：\n   - .claude/memory/development-progress.md\n   - .claude/memory/development-conventions.md\n   - .claude/memory/MEMORY.md\n\n2. 用 Bash 运行 `git diff --name-only HEAD 2>/dev/null || echo \"非 git 仓库，检查文件时间戳\"; ls -lt --time-style=+\"%Y-%m-%d %H:%M\" .claude/memory/*.md 2>/dev/null` 了解本次会话改动了哪些文件\n\n3. **更新 development-progress.md**：\n   - 在「最新改动」区域添加本次会话的改动摘要（日期 + 改了什么文件）\n   - 更新任务完成状态（将完成的 [ ] 改为 [x]）\n   - 确保日期格式为 YYYY-MM-DD\n\n4. **检查 development-conventions.md**：\n   - 如果 MEMORY.md 或其他文件中有新增的记忆条目，确认已在 conventions 中体现\n   - 不要添加凭空猜测的规则，只更新实际存在的\n\n5. **验证**：确保所有 .md 文件格式正确，MEMORY.md 索引包含了所有实际存在的记忆文件\n\n要点：\n- 只更新确实有变化的文件，不做无意义的格式化修改\n- 保持现有内容结构不变，追加而非覆盖\n- 用中文撰写所有内容",
-            "timeout": 60,
-            "statusMessage": "正在将本次对话上下文写入项目记忆...",
+            "type": "command",
+            "command": "cd /d/PROGRAMS/desktop-pets && echo \"- $(date +%Y-%m-%d): [自动记录] 会话结束，Stop hook 触发\" >> .claude/memory/development-progress.md 2>/dev/null; echo '{\"systemMessage\": \"Stop hook: 记忆文件时间戳已记录\"}'",
+            "timeout": 10,
             "async": true
           }
         ]
