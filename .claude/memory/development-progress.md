@@ -15,8 +15,9 @@ metadata:
 
 - 2026-07-23：创建 `.claude/` 目录、记忆系统（4 个记忆文件）、CLAUDE.md
 - 2026-07-23：配置 Stop hook——对话结束时自动检查文件变更、同步记忆索引
-- 2026-07-23：权限系统三次迭代——`acceptEdits` → `dontAsk` → `bypassPermissions` + 全局 `skipDangerousModePermissionPrompt`，**权限完全关闭，零弹窗**
+- 2026-07-23：权限系统三次迭代——`acceptEdits` → `dontAsk` → `bypassPermissions` + VSCode 扩展专属权限开关，**权限完全关闭，零弹窗**
 - 2026-07-23：确立自动化工作流规则——需求-设计-开发-测试-验收完整闭环，执行阶段不逐个人工确认
+- 2026-07-23：初始化 Git 仓库 + .gitignore + 首次提交；确立版本管理规则——任务完成即提交推送
 
 ## 下一步
 

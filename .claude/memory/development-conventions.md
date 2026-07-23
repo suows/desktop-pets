@@ -26,6 +26,13 @@ metadata:
 4. **实现方式**：项目 `settings.json` → `defaultMode: "bypassPermissions"` + 全局 `skipDangerousModePermissionPrompt: true`，**权限系统完全关闭，零弹窗**
 5. **终极目标**：从需求到验收的完整闭环中，人工只需在需求阶段参与，其余全部自动化
 
+### 版本管理规则（2026-07-23）
+
+1. **每次任务完成必须提交**：功能开发完成 → `git add -A && git commit -m "<type>: <描述>" && git push`
+2. **每次对话结束必须提交**：记忆文件 + CLAUDE.md + 代码 → 全部提交推送
+3. **提交格式**：`<type>: <简短描述>`，type 用 `feat`/`fix`/`chore`/`docs`/`refactor`
+4. **不提交的内容**：`node_modules/`、`__pycache__/`、`.env`、session transcripts（已在 .gitignore 配置）
+
 ## 编码规范
 
 <!-- TODO: 确定技术栈后填写 -->
