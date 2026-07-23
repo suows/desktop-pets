@@ -4,31 +4,52 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-桌面宠物（Desktop Pets）— 桌面伴侣应用，长期维护项目。
+**PixelPet** — AI 像素桌面宠物助手。一只用 Canvas 程序化绘制的 16×16 像素猫，运行在 Windows 桌面（透明悬浮窗口），提供陪伴和互动反馈。
+
+**第一阶段目标**：一天完成可运行 MVP——看到像素猫、点击有反馈、可拖动、有系统托盘。
 
 ## Tech Stack
 
-<!-- TODO: 确定技术栈后填写 -->
+| 层 | 技术 |
+|----|------|
+| 桌面框架 | Electron 34 |
+| 构建工具 | Vite 6 + vite-plugin-electron |
+| 前端 | React 19 + TypeScript 5.8 |
+| 像素渲染 | Canvas 2D（putImageData + scale） |
+| 动画 | requestAnimationFrame 逐帧 |
+| 存储 | electron-store (JSON) |
+| 打包 | electron-builder (NSIS) |
 
 ## Development Commands
 
-<!-- TODO: 项目初始化后填写构建、测试、运行命令 -->
-
-## 自动化工作流（核心行为准则）
-
-**需求-设计-开发-测试-验收完整闭环，最小化人工参与。**
-
-1. **需求阶段**：这是唯一需要频繁和你对齐的阶段。我会主动提问澄清模糊需求
-2. **执行阶段**（设计→开发→测试→验收）：需求一旦确定，全自动推进，不再逐个人工确认
-   - 所有工具操作默认选 yes / 第一个选项
-   - 不询问"是否继续"、"是否执行"之类的确认性问题
-   - 项目已配置 `defaultMode: "acceptEdits"` + 命令白名单，权限弹窗已最小化
-3. **异常处理**：遇到编译/测试失败时，自动诊断并修复（最多 3 次），无需人工介入
-4. **何时才问你**：需求歧义、多个等价方案需要偏好选择、安全风险警告
+```bash
+npm install          # 安装依赖
+npm run dev          # 启动开发模式（Electron + Vite HMR）
+npm run build        # 编译 TypeScript + 打包 exe
+npx tsc --noEmit    # 编译检查（不生成文件）
+```
 
 ## Architecture
 
-<!-- TODO: 填入架构决策和设计 -->
+```
+electron/main.ts          # 主进程：透明宠物窗口 + 系统托盘 + IPC
+electron/preload.ts       # contextBridge 安全暴露 API
+src/pet-window/
+  ├─ App.tsx              # 宠物窗口根组件（拖动 + 全局类型声明）
+  ├─ PixelCat.tsx         # Canvas 渲染 16×16 像素猫
+  ├─ usePetState.ts       # 状态机：idle → clicked/happy/sleep
+  ├─ useAnimation.ts      # requestAnimationFrame 帧循环
+  └─ cat-pixels.ts        # 所有像素帧数据（唯一美术源文件）
+src/panels/
+  └─ SettingsPanel.tsx    # 设置面板（独立窗口）
+shared/
+  └─ ipc-channels.ts      # IPC 通道常量
+```
+
+**设计文档**：`docs/superpowers/specs/2026-07-24-pixelpet-mvp-design.md`
+**实施计划**：`docs/superpowers/plans/2026-07-24-pixelpet-mvp.md`
+
+## 自动化工作流（核心行为准则）
 
 ---
 

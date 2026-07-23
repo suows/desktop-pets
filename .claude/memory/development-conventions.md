@@ -28,22 +28,27 @@ metadata:
 
 ### 版本管理规则（2026-07-23）
 
-1. **每次任务完成必须提交**：功能开发完成 → `git add -A && git commit -m "<type>: <描述>" && git push`
-2. **每次对话结束必须提交**：记忆文件 + CLAUDE.md + 代码 → 全部提交推送
-3. **提交格式**：`<type>: <简短描述>`，type 用 `feat`/`fix`/`chore`/`docs`/`refactor`
-4. **不提交的内容**：`node_modules/`、`__pycache__/`、`.env`、session transcripts（已在 .gitignore 配置）
+1. **只提交核心文件**：源代码 + 配置 + 文档 + 记忆文件。`dist/`、`node_modules/`、`release/`、构建产物一律不提交
+2. **每次任务完成必须提交**：功能开发完成 → `git add <核心文件> && git commit -m "<type>: <描述>" && git push`
+3. **每次对话结束必须提交**：记忆文件 + CLAUDE.md + 代码 → 全部提交推送
+4. **提交格式**：`<type>: <简短描述>`，type 用 `feat`/`fix`/`chore`/`docs`/`refactor`
+5. **用 `git add <文件>` 而非 `git add -A`**：精挑细选，避免误提交构建产物和临时文件
 
-## 编码规范
+### PixelPet 技术约束（2026-07-24）
 
-<!-- TODO: 确定技术栈后填写 -->
+1. **框架**：Electron 34 + Vite 6 + React 19 + TypeScript 5.8
+2. **渲染**：Canvas 程序化绘制 16×16 像素猫，`putImageData` + `scale()` 放大到 128×128
+3. **动画**：`requestAnimationFrame` 逐帧循环，帧数据统一在 `cat-pixels.ts`
+4. **状态管理**：React hooks（usePetState 状态机 + useAnimation 帧循环）
+5. **存储**：electron-store (JSON)，存 `%APPDATA%/PixelPet/`
+6. **窗口**：透明无边框宠物窗 + 独立设置面板窗
 
-## 命名规范
+### 命名规范
 
-<!-- TODO: 确定技术栈后填写 -->
-
-## 架构约束
-
-<!-- TODO: 确定后填写 -->
+- **文件**：kebab-case（`cat-pixels.ts`, `use-pet-state.ts`）
+- **组件**：PascalCase（`PixelCat`, `SettingsPanel`）
+- **Hooks**：`use` 前缀（`usePetState`, `useAnimation`）
+- **常量**：UPPER_SNAKE_CASE（`SLEEP_TIMEOUT`）
 
 **Why:** 长期维护项目需要固定规则以避免每次都重复讨论相同约定、偏好和标准。
 **How to apply:** 每次对话开始时，Claude 应阅读 [[development-progress]] 和本文件，确保在最新约定的基础上工作。
