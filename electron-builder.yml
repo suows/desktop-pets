@@ -1,0 +1,13 @@
+appId: com.pixelpet.app
+productName: PixelPet
+directories:
+  output: release
+files:
+  - dist/**/*
+  - dist-electron/**/*
+win:
+  target: nsis
+  icon: null
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
