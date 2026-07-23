@@ -5,11 +5,12 @@ import { IPC } from '../shared/ipc-channels';
 import Store from 'electron-store';
 
 const store = new Store({
+  projectName: 'PixelPet',
   defaults: {
     pet: { x: 100, y: 100 },
     settings: { autoLaunch: false, soundEnabled: false, opacity: 1.0 }
   }
-});
+} as any);
 
 let petWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;

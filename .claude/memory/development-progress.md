@@ -18,6 +18,12 @@ metadata:
 - 2026-07-24：编写设计规范 `docs/superpowers/specs/2026-07-24-pixelpet-mvp-design.md`
 - 2026-07-24：编写实施计划 `docs/superpowers/plans/2026-07-24-pixelpet-mvp.md`（11 tasks）
 - 2026-07-24：确立"只提交核心文件" Git 规则；更新约束文档至 PixelPet 就绪状态
+- 2026-07-24：**验收与修复阶段**：
+  - 发现并绕过 [Electron bug #49034](https://github.com/electron/electron/issues/49034)：Windows 下 `require('electron')` 返回路径字符串而非 API 对象。影响 Electron 28-43 全版本。在 `electron/main.ts` 中添加 `projectName` 修复 electron-store 初始化；运行时需在桌面 GUI 环境中执行 `npm run dev`。
+  - 升级 `vite-plugin-electron` 0.28→1.1.0 / `vite-plugin-electron-renderer`→1.0.0，适配新 API（`vite-plugin-electron/simple`）
+  - TypeScript 编译检查：**零错误** ✅
+  - Vite 生产构建：renderer(33 modules) + main(385 modules) + preload 全部成功 ✅
+  - 当前环境 Electron GUI 无法初始化（终端无桌面），`npm run dev` 运行时验证需在用户桌面执行
 - 2026-07-24：**MVP 全部 11 个任务实施完成**（subagent-driven-development 流程）：
   - Task 1: 项目脚手架（package.json, tsconfig, vite.config, index.html）✅
   - Task 2: IPC 通道常量（shared/ipc-channels.ts）✅
@@ -83,3 +89,4 @@ PixelPet/
 
 **Why:** PixelPet 是长期维护的桌面应用，需要清晰追踪进度。
 **How to apply:** 每次新对话开始时，优先阅读此文件和 [[development-conventions]]，了解最新项目状态。
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
