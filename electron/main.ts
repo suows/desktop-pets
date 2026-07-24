@@ -1,5 +1,5 @@
 // electron/main.ts
-import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen } from 'electron';
+import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron';
 import path from 'path';
 import { IPC } from '../shared/ipc-channels';
 import Store from 'electron-store';
@@ -34,6 +34,17 @@ function createPetWindow(): void {
   });
   petWindow.setVisibleOnAllWorkspaces(true);
   petWindow.setAlwaysOnTop(true, 'floating');
+
+  // Auto-save position when window is moved (by CSS -webkit-app-region drag)
+  let moveTimer: ReturnType<typeof setTimeout> | null = null;
+  petWindow.on('moved', () => {
+    if (moveTimer) return; // debounce
+    moveTimer = setTimeout(() => {
+      moveTimer = null;
+      const [x, y] = petWindow!.getPosition();
+      store.set('pet', { x, y });
+    }, 200);
+  });
 
   if (process.env.VITE_DEV_SERVER_URL) {
     petWindow.loadURL(`${process.env.VITE_DEV_SERVER_URL}#/pet`);

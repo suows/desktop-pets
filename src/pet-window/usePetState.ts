@@ -6,7 +6,6 @@ const SLEEP_TIMEOUT = 30_000; // 30s idle → sleep
 
 export function usePetState() {
   const [state, setState] = useState<PetState>('idle');
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const sleepTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const resetSleepTimer = useCallback(() => {
@@ -32,15 +31,11 @@ export function usePetState() {
     resetSleepTimer();
   }, [resetSleepTimer]);
 
-  const handleDrag = useCallback((x: number, y: number) => {
-    setPosition({ x, y });
-  }, []);
-
   // start sleep timer on idle
   useEffect(() => {
     if (state === 'idle') resetSleepTimer();
     return () => { if (sleepTimer.current) clearTimeout(sleepTimer.current); };
   }, [state, resetSleepTimer]);
 
-  return { state, position, handleClick, handleDoubleClick, handleDrag, setPosition };
+  return { state, handleClick, handleDoubleClick };
 }

@@ -13,6 +13,13 @@ metadata:
 
 ## 最新改动
 
+- 2026-07-24：**修复窗口拖动 + 位置持久化**：
+  - `App.tsx`：删除手动拖拽代码（mousedown/move/up），改用 CSS `-webkit-app-region: drag`
+  - `PixelCat.tsx`：canvas 添加 `-webkit-app-region: no-drag` 保持点击/双击交互
+  - `usePetState.ts`：删除 `position`/`handleDrag`/`setPosition`，仅保留状态机逻辑
+  - `electron/main.ts`：添加 `moved` 事件监听器（200ms debounce）自动保存窗口位置到 electron-store；移除未使用的 `screen` import
+  - TypeScript 编译检查：**零错误** ✅
+  - Vite 生产构建：renderer(33) + main(385) + preload 全部成功 ✅
 - 2026-07-24：完成 PixelPet MVP 需求分析 + 架构设计（brainstorming 流程）
 - 2026-07-24：技术决策全部确定——Electron + Vite + React + Canvas + electron-store
 - 2026-07-24：编写设计规范 `docs/superpowers/specs/2026-07-24-pixelpet-mvp-design.md`
@@ -71,7 +78,8 @@ PixelPet/
 - [ ] `npm run dev` 启动，桌面出现透明像素猫
 - [ ] 单击 → 播放眨眼反馈动画
 - [ ] 双击 → 播放开心跳跃动画
-- [ ] 拖动改变位置，重启保持
+注意：[x] 表示代码已实现并通过编译验证；UI 行为需在桌面环境运行时验收
+- [ ] 拖动改变位置，重启保持 (代码已修复：CSS -webkit-app-region + moved 事件自动保存)
 - [ ] 30s 无操作 → 猫进入睡眠动画
 - [ ] 点击睡眠猫 → 唤醒
 - [ ] 系统托盘菜单：显示/隐藏/设置/退出
@@ -89,4 +97,8 @@ PixelPet/
 
 **Why:** PixelPet 是长期维护的桌面应用，需要清晰追踪进度。
 **How to apply:** 每次新对话开始时，优先阅读此文件和 [[development-conventions]]，了解最新项目状态。
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
 - 2026-07-24: [自动记录] 会话结束，Stop hook 触发

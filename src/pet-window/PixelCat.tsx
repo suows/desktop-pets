@@ -72,7 +72,7 @@ export function PixelCat({ state, onClick, onDoubleClick }: Props) {
       ref={canvasRef}
       width={PIXEL_SIZE * SCALE}
       height={PIXEL_SIZE * SCALE}
-      style={{ cursor: 'pointer', display: 'block' }}
+      style={{ WebkitAppRegion: 'no-drag', cursor: 'pointer', display: 'block' } as React.CSSProperties}
       onClick={handleClick}
     />
   );
