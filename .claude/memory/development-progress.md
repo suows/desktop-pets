@@ -9,9 +9,11 @@ metadata:
 
 ## 当前状态
 
-**MVP 实施阶段已完成——所有 11 个任务开发完毕，代码已提交推送。窗口拖动 bug 已修复并通过 spec + code quality 双重审查。**
+**MVP 扩展阶段完成——11 个基础任务 + 窗口拖动修复 + TODO 面板功能，全部代码已提交推送。所有功能通过 spec + code quality 双重审查。**
 
 ## 最新改动
+
+- 2026-07-24：**修复双击最大化导致窗口"消失"**：CSS `-webkit-app-region: drag` 在 Windows 上将双击解释为标题栏双击最大化透明窗口。修复：`main.ts` BrowserWindow 添加 `maximizable: false`
 
 - 2026-07-24：**TODO 面板功能**（完整 CRUD 持久化待办列表）：
   - `shared/ipc-channels.ts`：新增 5 个 TODO IPC 通道（`TODO_LIST`, `TODO_ADD`, `TODO_TOGGLE`, `TODO_DELETE`, `TODO_OPEN`）
