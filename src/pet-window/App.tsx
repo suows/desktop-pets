@@ -7,6 +7,13 @@ declare global {
     electronAPI?: {
       window: {
         openSettings: () => void;
+        openTodo: () => void;
+      };
+      todo: {
+        list: () => Promise<Array<{ id: string; text: string; done: boolean; createdAt: string }>>;
+        add: (text: string) => void;
+        toggle: (id: string) => void;
+        delete: (id: string) => void;
       };
     };
   }

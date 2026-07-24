@@ -13,6 +13,18 @@ metadata:
 
 ## 最新改动
 
+- 2026-07-24：**TODO 面板功能**（完整 CRUD 持久化待办列表）：
+  - `shared/ipc-channels.ts`：新增 5 个 TODO IPC 通道（`TODO_LIST`, `TODO_ADD`, `TODO_TOGGLE`, `TODO_DELETE`, `TODO_OPEN`）
+  - `electron/main.ts`：store 新增 `todos` 默认数组 + `createTodoWindow()` 函数（280x400，位于宠物窗口右侧 20px）+ 5 个 IPC handlers + 托盘菜单新增"待办事项"项
+  - `electron/preload.ts`：新增 `window.openTodo()` + `todo` CRUD API（list/add/toggle/delete）
+  - `src/index.tsx`：新增 `#/todo` hash 路由
+  - `src/panels/TodoPanel.tsx`：**新建**——完整待办事项面板组件（React + inline styles）：checkbox 切换完成状态、删除按钮、输入框 + Enter/按钮添加、完成项删除线 + 灰色样式、null 状态空提示、待办数量 badge、橙色 `#FF8C42` 主题色
+  - `src/pet-window/App.tsx`：Window 类型声明新增 `window.openTodo` + `todo.*` 方法签名
+  - `src/panels/SettingsPanel.tsx`：新增"📋 待办事项"按钮调用 `window.electronAPI.window.openTodo()`
+  - TypeScript 编译检查：**零错误** ✅
+  - Vite 生产构建：renderer(34) + main(385) + preload(2) 全部成功 ✅
+  - electron-builder 打包因网络问题（GitHub 无法访问下载 winCodeSign）未完成，代码层面无误
+
 - 2026-07-24：**修复窗口拖动 + 位置持久化**（subagent-driven-development 全流程：implement → spec review → code quality review → fix → verify）：
   - `App.tsx`：删除手动拖拽代码，改用 CSS `-webkit-app-region: drag` + 清理 Window 类型声明
   - `PixelCat.tsx`：canvas 添加 `-webkit-app-region: no-drag` 保持点击/双击交互
@@ -73,7 +85,8 @@ PixelPet/
     │   ├── useAnimation.ts    ✅ 帧循环 hook
     │   └── cat-pixels.ts      ✅ 像素帧数据（唯一美术源）
     └── panels/
-        └── SettingsPanel.tsx  ✅ 设置面板占位
+        ├── SettingsPanel.tsx ✅ 设置面板 + 待办事项入口
+        └── TodoPanel.tsx     ✅ 待办事项面板（CRUD + 持久化）
 
 ## 待验收
 
@@ -86,6 +99,10 @@ PixelPet/
 - [ ] 点击睡眠猫 → 唤醒
 - [ ] 系统托盘菜单：显示/隐藏/设置/退出
 - [ ] 设置面板可弹可关
+- [ ] 设置面板中"待办事项"按钮可打开 TODO 窗口
+- [ ] TODO 窗口：添加/完成/删除待办事项正常
+- [ ] TODO 数据持久化（关闭重开数据保留）
+- [ ] 系统托盘"待办事项"菜单项可打开 TODO 窗口
 - [ ] `npm run build` → 生成安装包 exe
 
 ## 已完成
@@ -100,3 +117,7 @@ PixelPet/
 
 **Why:** PixelPet 是长期维护的桌面应用，需要清晰追踪进度。
 **How to apply:** 每次新对话开始时，优先阅读此文件和 [[development-conventions]]，了解最新项目状态。
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
+- 2026-07-24: [自动记录] 会话结束，Stop hook 触发
