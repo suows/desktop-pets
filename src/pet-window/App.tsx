@@ -5,10 +5,6 @@ import { usePetState } from './usePetState';
 declare global {
   interface Window {
     electronAPI?: {
-      pet: {
-        savePosition: (x: number, y: number) => void;
-        loadPosition: () => Promise<{ x: number; y: number }>;
-      };
       window: {
         openSettings: () => void;
       };

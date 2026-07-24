@@ -36,14 +36,25 @@ function createPetWindow(): void {
   petWindow.setAlwaysOnTop(true, 'floating');
 
   // Auto-save position when window is moved (by CSS -webkit-app-region drag)
+  const POSITION_SAVE_DEBOUNCE_MS = 200;
   let moveTimer: ReturnType<typeof setTimeout> | null = null;
   petWindow.on('moved', () => {
-    if (moveTimer) return; // debounce
+    if (moveTimer) clearTimeout(moveTimer);
     moveTimer = setTimeout(() => {
       moveTimer = null;
       const [x, y] = petWindow!.getPosition();
       store.set('pet', { x, y });
-    }, 200);
+    }, POSITION_SAVE_DEBOUNCE_MS);
+  });
+
+  petWindow.on('close', () => {
+    if (moveTimer) {
+      clearTimeout(moveTimer);
+      moveTimer = null;
+    }
+    // Save final position eagerly (don't rely on debounce timer)
+    const [x, y] = petWindow!.getPosition();
+    store.set('pet', { x, y });
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
@@ -86,14 +97,6 @@ function createTray(): void {
 }
 
 // IPC handlers
-ipcMain.on(IPC.PET_POSITION_SAVE, (_event, pos: { x: number; y: number }) => {
-  store.set('pet', pos);
-});
-
-ipcMain.handle(IPC.PET_POSITION_LOAD, () => {
-  return store.get('pet');
-});
-
 ipcMain.on(IPC.WINDOW_SETTINGS, () => {
   createSettingsWindow();
 });
