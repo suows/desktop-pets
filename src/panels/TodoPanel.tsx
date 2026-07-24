@@ -11,21 +11,24 @@ interface Todo {
 export function TodoPanel() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newText, setNewText] = useState('');
-
-  const loadTodos = () => {
-    window.electronAPI?.todo.list().then(setTodos);
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadTodos();
+    window.electronAPI?.todo.list()
+      .then(todos => { setTodos(todos); setLoading(false); })
+      .catch(err => { console.error('Failed to load todos:', err); setLoading(false); });
   }, []);
 
   const handleAdd = async () => {
     const trimmed = newText.trim();
-    if (!trimmed) return;
-    const updatedTodos = await window.electronAPI!.todo.add(trimmed);
-    setTodos(updatedTodos);
-    setNewText('');
+    if (!trimmed || !window.electronAPI) return;
+    try {
+      const updatedTodos = await window.electronAPI.todo.add(trimmed);
+      setTodos(updatedTodos);
+      setNewText('');
+    } catch (err) {
+      console.error('Failed to add todo:', err);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -35,13 +38,23 @@ export function TodoPanel() {
   };
 
   const handleToggle = async (id: string) => {
-    const updatedTodos = await window.electronAPI!.todo.toggle(id);
-    setTodos(updatedTodos);
+    if (!window.electronAPI) return;
+    try {
+      const updatedTodos = await window.electronAPI.todo.toggle(id);
+      setTodos(updatedTodos);
+    } catch (err) {
+      console.error('Failed to toggle todo:', err);
+    }
   };
 
   const handleDelete = async (id: string) => {
-    const updatedTodos = await window.electronAPI!.todo.delete(id);
-    setTodos(updatedTodos);
+    if (!window.electronAPI) return;
+    try {
+      const updatedTodos = await window.electronAPI.todo.delete(id);
+      setTodos(updatedTodos);
+    } catch (err) {
+      console.error('Failed to delete todo:', err);
+    }
   };
 
   const containerStyle: React.CSSProperties = {
@@ -156,42 +169,50 @@ export function TodoPanel() {
       </div>
 
       <div style={listStyle}>
-        {todos.length === 0 && (
-          <p style={{ color: '#bbb', fontSize: 13, textAlign: 'center', marginTop: 40 }}>
-            还没有待办事项
-          </p>
-        )}
-        {todos.map((todo) => (
-          <div key={todo.id} style={itemStyle}>
-            <button
-              style={{
-                ...checkboxStyle,
-                color: todo.done ? '#ccc' : '#FF8C42',
-              }}
-              onClick={() => handleToggle(todo.id)}
-            >
-              {todo.done ? '☑' : '☐'}
-            </button>
-            <span
-              style={{
-                fontSize: 13,
-                textDecoration: todo.done ? 'line-through' : 'none',
-                color: todo.done ? '#999' : '#333',
-                flex: 1,
-                wordBreak: 'break-word',
-              }}
-            >
-              {todo.text}
-            </span>
-            <button
-              style={deleteBtnStyle}
-              onClick={() => handleDelete(todo.id)}
-              title="删除"
-            >
-              🗑
-            </button>
+        {loading ? (
+          <div style={{ textAlign: 'center', color: '#999', padding: '40px 0' }}>
+            加载中...
           </div>
-        ))}
+        ) : (
+          <>
+            {todos.length === 0 && (
+              <p style={{ color: '#bbb', fontSize: 13, textAlign: 'center', marginTop: 40 }}>
+                还没有待办事项
+              </p>
+            )}
+            {todos.map((todo) => (
+              <div key={todo.id} style={itemStyle}>
+                <button
+                  style={{
+                    ...checkboxStyle,
+                    color: todo.done ? '#ccc' : '#FF8C42',
+                  }}
+                  onClick={() => handleToggle(todo.id)}
+                >
+                  {todo.done ? '☑' : '☐'}
+                </button>
+                <span
+                  style={{
+                    fontSize: 13,
+                    textDecoration: todo.done ? 'line-through' : 'none',
+                    color: todo.done ? '#999' : '#333',
+                    flex: 1,
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {todo.text}
+                </span>
+                <button
+                  style={deleteBtnStyle}
+                  onClick={() => handleDelete(todo.id)}
+                  title="删除"
+                >
+                  🗑
+                </button>
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       <div style={inputRowStyle}>
