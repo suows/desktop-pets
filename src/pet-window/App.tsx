@@ -11,9 +11,9 @@ declare global {
       };
       todo: {
         list: () => Promise<Array<{ id: string; text: string; done: boolean; createdAt: string }>>;
-        add: (text: string) => void;
-        toggle: (id: string) => void;
-        delete: (id: string) => void;
+        add: (text: string) => Promise<Array<{ id: string; text: string; done: boolean; createdAt: string }>>;
+        toggle: (id: string) => Promise<Array<{ id: string; text: string; done: boolean; createdAt: string }>>;
+        delete: (id: string) => Promise<Array<{ id: string; text: string; done: boolean; createdAt: string }>>;
       };
     };
   }

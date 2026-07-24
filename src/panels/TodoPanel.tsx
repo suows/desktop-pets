@@ -20,13 +20,12 @@ export function TodoPanel() {
     loadTodos();
   }, []);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const trimmed = newText.trim();
     if (!trimmed) return;
-    window.electronAPI?.todo.add(trimmed);
+    const updatedTodos = await window.electronAPI!.todo.add(trimmed);
+    setTodos(updatedTodos);
     setNewText('');
-    // Small delay to let IPC round-trip complete before reloading
-    setTimeout(loadTodos, 100);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -35,14 +34,14 @@ export function TodoPanel() {
     }
   };
 
-  const handleToggle = (id: string) => {
-    window.electronAPI?.todo.toggle(id);
-    setTimeout(loadTodos, 100);
+  const handleToggle = async (id: string) => {
+    const updatedTodos = await window.electronAPI!.todo.toggle(id);
+    setTodos(updatedTodos);
   };
 
-  const handleDelete = (id: string) => {
-    window.electronAPI?.todo.delete(id);
-    setTimeout(loadTodos, 100);
+  const handleDelete = async (id: string) => {
+    const updatedTodos = await window.electronAPI!.todo.delete(id);
+    setTodos(updatedTodos);
   };
 
   const containerStyle: React.CSSProperties = {

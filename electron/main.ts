@@ -15,6 +15,8 @@ const store = new Store({
 } as any);
 
 let petWindow: BrowserWindow | null = null;
+let settingsWindow: BrowserWindow | null = null;
+let todoWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 
 function createPetWindow(): void {
@@ -68,7 +70,11 @@ function createPetWindow(): void {
 }
 
 function createSettingsWindow(): void {
-  const settingsWin = new BrowserWindow({
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    settingsWindow.focus();
+    return;
+  }
+  settingsWindow = new BrowserWindow({
     width: 360, height: 480,
     resizable: false,
     webPreferences: {
@@ -77,16 +83,21 @@ function createSettingsWindow(): void {
       nodeIntegration: false,
     },
   });
+  settingsWindow.on('closed', () => { settingsWindow = null; });
   if (process.env.VITE_DEV_SERVER_URL) {
-    settingsWin.loadURL(`${process.env.VITE_DEV_SERVER_URL}#/settings`);
+    settingsWindow.loadURL(`${process.env.VITE_DEV_SERVER_URL}#/settings`);
   } else {
-    settingsWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: '/settings' });
+    settingsWindow.loadFile(path.join(__dirname, '../dist/index.html'), { hash: '/settings' });
   }
 }
 
 function createTodoWindow(): void {
+  if (todoWindow && !todoWindow.isDestroyed()) {
+    todoWindow.focus();
+    return;
+  }
   const petPos = store.get('pet') as { x: number; y: number };
-  const todoWin = new BrowserWindow({
+  todoWindow = new BrowserWindow({
     width: 280, height: 400,
     x: petPos.x + 180,  // 20px to the right of pet window (pet width 160 + 20)
     y: petPos.y,
@@ -98,10 +109,11 @@ function createTodoWindow(): void {
       nodeIntegration: false,
     },
   });
+  todoWindow.on('closed', () => { todoWindow = null; });
   if (process.env.VITE_DEV_SERVER_URL) {
-    todoWin.loadURL(`${process.env.VITE_DEV_SERVER_URL}#/todo`);
+    todoWindow.loadURL(`${process.env.VITE_DEV_SERVER_URL}#/todo`);
   } else {
-    todoWin.loadFile(path.join(__dirname, '../dist/index.html'), { hash: '/todo' });
+    todoWindow.loadFile(path.join(__dirname, '../dist/index.html'), { hash: '/todo' });
   }
 }
 
@@ -130,7 +142,7 @@ ipcMain.handle(IPC.TODO_LIST, () => {
   return store.get('todos');
 });
 
-ipcMain.on(IPC.TODO_ADD, (_event, todo: { text: string }) => {
+ipcMain.handle(IPC.TODO_ADD, (_event, todo: { text: string }) => {
   const todos = store.get('todos') as any[];
   todos.push({
     id: crypto.randomUUID(),
@@ -139,17 +151,20 @@ ipcMain.on(IPC.TODO_ADD, (_event, todo: { text: string }) => {
     createdAt: new Date().toISOString(),
   });
   store.set('todos', todos);
+  return todos;
 });
 
-ipcMain.on(IPC.TODO_TOGGLE, (_event, { id }: { id: string }) => {
+ipcMain.handle(IPC.TODO_TOGGLE, (_event, { id }: { id: string }) => {
   const todos = store.get('todos') as any[];
   const todo = todos.find((t: any) => t.id === id);
   if (todo) { todo.done = !todo.done; store.set('todos', todos); }
+  return todos;
 });
 
-ipcMain.on(IPC.TODO_DELETE, (_event, { id }: { id: string }) => {
+ipcMain.handle(IPC.TODO_DELETE, (_event, { id }: { id: string }) => {
   const todos = (store.get('todos') as any[]).filter((t: any) => t.id !== id);
   store.set('todos', todos);
+  return todos;
 });
 
 ipcMain.on(IPC.TODO_OPEN, () => {

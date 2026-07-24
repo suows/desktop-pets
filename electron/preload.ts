@@ -10,8 +10,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   todo: {
     list: (): Promise<Array<{ id: string; text: string; done: boolean; createdAt: string }>> =>
       ipcRenderer.invoke(IPC.TODO_LIST),
-    add: (text: string) => ipcRenderer.send(IPC.TODO_ADD, { text }),
-    toggle: (id: string) => ipcRenderer.send(IPC.TODO_TOGGLE, { id }),
-    delete: (id: string) => ipcRenderer.send(IPC.TODO_DELETE, { id }),
+    add: (text: string) => ipcRenderer.invoke(IPC.TODO_ADD, { text }),
+    toggle: (id: string) => ipcRenderer.invoke(IPC.TODO_TOGGLE, { id }),
+    delete: (id: string) => ipcRenderer.invoke(IPC.TODO_DELETE, { id }),
   },
 });
