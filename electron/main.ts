@@ -25,6 +25,7 @@ function createPetWindow(): void {
     alwaysOnTop: true,
     hasShadow: false,
     resizable: false,
+    maximizable: false,
     skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
